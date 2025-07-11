@@ -6,21 +6,22 @@
     <title>بسيطة - منصة البيانات العقارية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Variables */
-        :root {
-            --primary: #2E86AB;
-            --secondary: #A23B72;
-            --accent: #F18F01;
-            --light: #F7F7F7;
-            --dark: #333333;
-            --card-bg: #FFFFFF;
-        }
-        
+        /* CSS Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Tajawal', sans-serif;
+        }
+        
+        /* Variables */
+        :root {
+            --primary: #1A365D;
+            --secondary: #2C5282;
+            --accent: #ED8936;
+            --light: #F7FAFC;
+            --dark: #2D3748;
+            --gray: #718096;
         }
         
         body {
@@ -38,12 +39,18 @@
         /* Header */
         header {
             padding: 20px 0;
-            background-color: var(--card-bg);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            padding: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .header-content {
@@ -55,12 +62,13 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            text-decoration: none;
         }
         
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 50%;
             display: flex;
@@ -68,15 +76,58 @@
             align-items: center;
             color: white;
             font-weight: bold;
-            font-size: 20px;
+            font-size: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.3),
+                rgba(255, 255, 255, 0)
+            );
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { left: -50%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+        
+        .logo-icon:hover {
+            transform: rotate(360deg);
         }
         
         .logo-text {
             font-weight: 700;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .logo-text::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -5px;
+            right: 0;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        .logo:hover .logo-text::after {
+            width: 100%;
         }
         
         .nav-links {
@@ -92,18 +143,14 @@
             transition: color 0.3s;
         }
         
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        
         .nav-links a::after {
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
             bottom: -5px;
-            left: 0;
-            background-color: var(--primary);
+            right: 0;
+            background-color: var(--accent);
             transition: width 0.3s;
         }
         
@@ -115,226 +162,277 @@
         .hero {
             padding: 180px 0 100px;
             text-align: center;
-            background: linear-gradient(135deg, rgba(46,134,171,0.1), rgba(162,59,114,0.1));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26,54,93,0.03), rgba(44,82,130,0.03));
+            z-index: -1;
         }
         
         .hero h1 {
-            font-size: 2.8rem;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 3rem;
+            margin-bottom: 25px;
+            color: var(--primary);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.3s forwards;
         }
         
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-bottom: 40px;
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
-            line-height: 1.6;
-            color: #555;
+            line-height: 1.7;
+            color: var(--gray);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.6s forwards;
         }
         
         .cta-button {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 15px 45px;
             border-radius: 30px;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(46, 134, 171, 0.3);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(26, 54, 93, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.9s forwards;
             position: relative;
             overflow: hidden;
         }
         
         .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(46, 134, 171, 0.4);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(26, 54, 93, 0.4);
         }
         
         .cta-button::after {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: linear-gradient(
-                to bottom right,
+                to right,
+                rgba(255, 255, 255, 0),
                 rgba(255, 255, 255, 0.3),
                 rgba(255, 255, 255, 0)
             );
-            transform: rotate(30deg);
-            transition: all 0.3s;
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
         }
         
         .cta-button:hover::after {
-            left: 100%;
+            transform: translateX(100%);
         }
         
         /* Features Section */
         .features {
-            padding: 80px 0;
-            background-color: var(--card-bg);
+            padding: 100px 0;
+            background-color: white;
         }
         
         .section-title {
             text-align: center;
-            margin-bottom: 60px;
-            font-size: 2.2rem;
+            margin-bottom: 70px;
+            font-size: 2.5rem;
             color: var(--primary);
             position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.3s forwards;
         }
         
         .section-title::after {
             content: '';
             position: absolute;
-            width: 80px;
+            width: 100px;
             height: 4px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 50%;
+            transform: translateX(50%);
             border-radius: 2px;
         }
         
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
+            gap: 40px;
         }
         
         .feature-card {
-            background: var(--card-bg);
-            padding: 30px;
+            background: white;
+            padding: 40px 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: transform 0.5s, box-shadow 0.5s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            z-index: 1;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .feature-card:nth-child(1) {
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+        }
+        
+        .feature-card:nth-child(2) {
+            animation: fadeInUp 1s ease-out 0.9s forwards;
+        }
+        
+        .feature-card:nth-child(3) {
+            animation: fadeInUp 1s ease-out 1.2s forwards;
         }
         
         .feature-card::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
+            right: 0;
             width: 100%;
             height: 5px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            transition: height 0.3s;
-            z-index: -1;
+            transition: height 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
         }
         
         .feature-card:hover::before {
             height: 100%;
         }
         
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            color: white;
-        }
-        
-        .feature-card:hover .feature-icon {
-            background: white;
-            color: var(--primary);
-        }
-        
-        .feature-card:hover .feature-title,
-        .feature-card:hover .feature-desc {
-            color: white;
-        }
-        
         .feature-icon {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 15px;
+            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 25px;
             color: white;
-            font-size: 1.8rem;
-            transition: all 0.3s;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: rotate(15deg) scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .feature-title {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
             color: var(--dark);
-            transition: color 0.3s;
+            transition: color 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-title {
+            color: white;
         }
         
         .feature-desc {
-            line-height: 1.7;
-            color: #666;
-            transition: color 0.3s;
+            line-height: 1.8;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-desc {
+            color: rgba(255,255,255,0.9);
         }
         
         /* Services Section */
         .services {
-            padding: 80px 0;
+            padding: 100px 0;
             background-color: var(--light);
+        }
+        
+        .services-container {
+            position: relative;
         }
         
         .services-slider {
             display: flex;
             overflow-x: auto;
-            gap: 20px;
-            padding: 20px 0;
+            gap: 25px;
+            padding: 30px 10px;
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
         
         .services-slider::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .services-slider::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        .services-slider::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 10px;
+            display: none;
         }
         
         .service-item {
-            min-width: 250px;
+            min-width: 300px;
             scroll-snap-align: start;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .service-item:nth-child(1) {
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+        }
+        
+        .service-item:nth-child(2) {
+            animation: fadeInUp 1s ease-out 0.8s forwards;
+        }
+        
+        .service-item:nth-child(3) {
+            animation: fadeInUp 1s ease-out 1s forwards;
+        }
+        
+        .service-item:nth-child(4) {
+            animation: fadeInUp 1s ease-out 1.2s forwards;
         }
         
         .service-item:hover {
-            transform: scale(1.05);
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
         }
         
         .service-title {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
             color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
         
         .service-title i {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
+            color: var(--accent);
         }
         
         .service-list {
@@ -342,9 +440,11 @@
         }
         
         .service-list li {
-            margin-bottom: 10px;
-            padding-right: 20px;
+            margin-bottom: 15px;
+            padding-right: 25px;
             position: relative;
+            color: var(--gray);
+            transition: color 0.3s ease;
         }
         
         .service-list li::before {
@@ -353,17 +453,26 @@
             right: 0;
             top: 50%;
             transform: translateY(-50%);
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background-color: var(--accent);
             border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .service-item:hover .service-list li {
+            color: var(--dark);
+        }
+        
+        .service-item:hover .service-list li::before {
+            transform: translateY(-50%) scale(1.3);
         }
         
         /* Footer */
         footer {
-            background-color: var(--dark);
+            background-color: var(--primary);
             color: white;
-            padding: 50px 0 20px;
+            padding: 70px 0 30px;
             text-align: center;
         }
         
@@ -371,31 +480,40 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 30px;
+            gap: 40px;
         }
         
         .footer-logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            text-decoration: none;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.3s forwards;
         }
         
         .footer-logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 50px;
+            height: 50px;
+            background: white;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
+            color: var(--primary);
             font-weight: bold;
-            font-size: 20px;
+            font-size: 24px;
+            transition: all 0.5s ease;
+        }
+        
+        .footer-logo:hover .footer-logo-icon {
+            transform: rotate(360deg);
         }
         
         .footer-logo-text {
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: white;
         }
         
@@ -404,22 +522,44 @@
             gap: 30px;
             flex-wrap: wrap;
             justify-content: center;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.6s forwards;
         }
         
         .footer-links a {
-            color: #ccc;
+            color: rgba(255,255,255,0.8);
             text-decoration: none;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            right: 0;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
         }
         
         .footer-links a:hover {
             color: white;
         }
         
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+        
         .copyright {
-            margin-top: 30px;
-            color: #999;
+            margin-top: 40px;
+            color: rgba(255,255,255,0.6);
             font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.9s forwards;
         }
         
         /* Animations */
@@ -434,8 +574,14 @@
             }
         }
         
-        .animate {
-            animation: fadeInUp 0.8s ease-out forwards;
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Floating Elements */
+        .floating {
+            animation: float 3s ease-in-out infinite;
         }
         
         .delay-1 {
@@ -444,10 +590,6 @@
         
         .delay-2 {
             animation-delay: 0.4s;
-        }
-        
-        .delay-3 {
-            animation-delay: 0.6s;
         }
         
         /* Responsive */
@@ -467,18 +609,22 @@
             .features-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .service-item {
+                min-width: 250px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <header>
+    <header id="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo">
-                    <div class="logo-icon">ب</div>
+                <a href="#" class="logo">
+                    <div class="logo-icon floating">B</div>
                     <div class="logo-text">بسيطة</div>
-                </div>
+                </a>
                 <nav class="nav-links">
                     <a href="#">الرئيسية</a>
                     <a href="#">الخدمات</a>
@@ -492,32 +638,37 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1 class="animate">منصة البيانات العقارية الذكية</h1>
-            <p class="animate delay-1">نقدم حلول بيانات عقارية متكاملة باستخدام الذكاء الاصطناعي لمساعدتك في اتخاذ القرارات الصحيحة</p>
-            <button class="cta-button animate delay-2">جرب الآن</button>
+            <h1>منصة البيانات العقارية الذكية</h1>
+            <p>نقدم حلول بيانات عقارية متكاملة باستخدام الذكاء الاصطناعي لمساعدتك في اتخاذ القرارات الصحيحة</p>
+            <button class="cta-button">جرب الآن <i class="fas fa-arrow-left"></i></button>
+            
+            <!-- Floating Elements -->
+            <div style="position: absolute; top: 20%; left: 10%; width: 30px; height: 30px; background: rgba(237, 137, 54, 0.3); border-radius: 50%; animation: float 4s ease-in-out infinite;" class="floating"></div>
+            <div style="position: absolute; top: 60%; right: 15%; width: 50px; height: 50px; background: rgba(26, 54, 93, 0.1); border-radius: 50%; animation: float 5s ease-in-out infinite 0.5s;" class="floating"></div>
+            <div style="position: absolute; bottom: 10%; left: 20%; width: 40px; height: 40px; background: rgba(44, 82, 130, 0.2); border-radius: 50%; animation: float 6s ease-in-out infinite 1s;" class="floating"></div>
         </div>
     </section>
     
     <!-- Features Section -->
     <section class="features">
         <div class="container">
-            <h2 class="section-title animate">حلولنا الذكية</h2>
+            <h2 class="section-title">حلولنا الذكية</h2>
             <div class="features-grid">
-                <div class="feature-card animate delay-1">
+                <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-robot"></i>
                     </div>
                     <h3 class="feature-title">Passet AI</h3>
                     <p class="feature-desc">روبوت محادثة يوفر بيانات عقارية محدثة بأسلوب السؤال والجواب</p>
                 </div>
-                <div class="feature-card animate delay-2">
+                <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3 class="feature-title">تحليلات بيانية</h3>
                     <p class="feature-desc">بيانات عقارية تحليلية مصورة في رسوم بيانية تفاعلية مع تقارير قائمة على البيانات</p>
                 </div>
-                <div class="feature-card animate delay-3">
+                <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-map-marked-alt"></i>
                     </div>
@@ -531,52 +682,45 @@
     <!-- Services Section -->
     <section class="services">
         <div class="container">
-            <h2 class="section-title animate">خدماتنا</h2>
-            <div class="services-slider">
-                <div class="service-item">
-                    <h3 class="service-title"><i class="fas fa-database"></i> بيانات</h3>
-                    <ul class="service-list">
-                        <li>مستويات الدخل</li>
-                        <li>معدلات التوظيف</li>
-                        <li>مؤشرات اقتصادية</li>
-                        <li>تحليل ديموغرافي</li>
-                    </ul>
-                </div>
-                <div class="service-item">
-                    <h3 class="service-title"><i class="fas fa-home"></i> أسعار وتمويل</h3>
-                    <ul class="service-list">
-                        <li>أسعار الفائدة الحالية</li>
-                        <li>أنواع القروض العقارية</li>
-                        <li>خيارات التمويل</li>
-                        <li>حسابات الجدوى</li>
-                    </ul>
-                </div>
-                <div class="service-item">
-                    <h3 class="service-title"><i class="fas fa-store"></i> عرض وطلب</h3>
-                    <ul class="service-list">
-                        <li>مخزون العقارات</li>
-                        <li>معدلات البيع</li>
-                        <li>أوقات البيع المتوقعة</li>
-                        <li>تحليل المنافسة</li>
-                    </ul>
-                </div>
-                <div class="service-item">
-                    <h3 class="service-title"><i class="fas fa-tools"></i> أدوات</h3>
-                    <ul class="service-list">
-                        <li>حاسبة القروض</li>
-                        <li>مقارنة الأسعار</li>
-                        <li>تنبؤات السوق</li>
-                        <li>تحليل الجوار</li>
-                    </ul>
-                </div>
-                <div class="service-item">
-                    <h3 class="service-title"><i class="fas fa-map"></i> مناطق</h3>
-                    <ul class="service-list">
-                        <li>الرياض</li>
-                        <li>جدة</li>
-                        <li>الدمام</li>
-                        <li>المدن الرئيسية</li>
-                    </ul>
+            <h2 class="section-title">خدماتنا</h2>
+            <div class="services-container">
+                <div class="services-slider">
+                    <div class="service-item">
+                        <h3 class="service-title"><i class="fas fa-database"></i> بيانات</h3>
+                        <ul class="service-list">
+                            <li>مستويات الدخل</li>
+                            <li>معدلات التوظيف</li>
+                            <li>مؤشرات اقتصادية</li>
+                            <li>تحليل ديموغرافي</li>
+                        </ul>
+                    </div>
+                    <div class="service-item">
+                        <h3 class="service-title"><i class="fas fa-home"></i> أسعار وتمويل</h3>
+                        <ul class="service-list">
+                            <li>أسعار الفائدة الحالية</li>
+                            <li>أنواع القروض العقارية</li>
+                            <li>خيارات التمويل</li>
+                            <li>حسابات الجدوى</li>
+                        </ul>
+                    </div>
+                    <div class="service-item">
+                        <h3 class="service-title"><i class="fas fa-store"></i> عرض وطلب</h3>
+                        <ul class="service-list">
+                            <li>مخزون العقارات</li>
+                            <li>معدلات البيع</li>
+                            <li>أوقات البيع المتوقعة</li>
+                            <li>تحليل المنافسة</li>
+                        </ul>
+                    </div>
+                    <div class="service-item">
+                        <h3 class="service-title"><i class="fas fa-tools"></i> أدوات</h3>
+                        <ul class="service-list">
+                            <li>حاسبة القروض</li>
+                            <li>مقارنة الأسعار</li>
+                            <li>تنبؤات السوق</li>
+                            <li>تحليل الجوار</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -586,10 +730,10 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-logo">
-                    <div class="footer-logo-icon">ب</div>
+                <a href="#" class="footer-logo">
+                    <div class="footer-logo-icon floating delay-1">B</div>
                     <div class="footer-logo-text">بسيطة</div>
-                </div>
+                </a>
                 <div class="footer-links">
                     <a href="#">الشروط والأحكام</a>
                     <a href="#">سياسة الخصوصية</a>
@@ -603,32 +747,36 @@
     
     <!-- JavaScript -->
     <script>
-        // Scroll Animation
-        const animateElements = document.querySelectorAll('.animate');
+        // Header Scroll Effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
         
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animated');
+        // Animate Elements on Scroll
+        const animateOnScroll = function() {
+            const elements = document.querySelectorAll('.feature-card, .service-item, .section-title');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementPosition < windowHeight - 100) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
                 }
             });
-        }, {
-            threshold: 0.1
-        });
+        };
         
-        animateElements.forEach(el => observer.observe(el));
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
         
-        // Button Click Effect
-        document.querySelector('.cta-button').addEventListener('click', function() {
-            this.classList.add('clicked');
-            setTimeout(() => {
-                this.classList.remove('clicked');
-                alert('سيتم توجيهك إلى صفحة التجربة قريباً');
-            }, 300);
-        });
-        
-        // Service Slider Auto Scroll
-        const slider = document.querySelector('.services-slider');
+        // Auto Scroll Services
+        let slider = document.querySelector('.services-slider');
         let isDown = false;
         let startX;
         let scrollLeft;
@@ -655,28 +803,60 @@
             slider.scrollLeft = scrollLeft - walk;
         });
         
-        // Auto scroll slider every 3 seconds
-        setInterval(() => {
+        // Auto scroll slider
+        let autoScroll = setInterval(() => {
             if (!isDown) {
                 const firstItem = document.querySelector('.service-item');
-                const itemWidth = firstItem.offsetWidth + 20; // width + gap
+                const itemWidth = firstItem.offsetWidth + 25;
                 
-                slider.scrollBy({
-                    left: itemWidth,
-                    behavior: 'smooth'
-                });
-                
-                // If reached end, scroll back to start
-                if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 100) {
-                    setTimeout(() => {
+                if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 50) {
+                    slider.scrollTo({
+                        left: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    slider.scrollBy({
+                        left: itemWidth,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }, 3000);
+        
+        // Pause auto-scroll on hover
+        slider.addEventListener('mouseenter', () => {
+            clearInterval(autoScroll);
+        });
+        
+        slider.addEventListener('mouseleave', () => {
+            autoScroll = setInterval(() => {
+                if (!isDown) {
+                    const firstItem = document.querySelector('.service-item');
+                    const itemWidth = firstItem.offsetWidth + 25;
+                    
+                    if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 50) {
                         slider.scrollTo({
                             left: 0,
                             behavior: 'smooth'
                         });
-                    }, 1000);
+                    } else {
+                        slider.scrollBy({
+                            left: itemWidth,
+                            behavior: 'smooth'
+                        });
+                    }
                 }
-            }
-        }, 3000);
+            }, 3000);
+        });
+        
+        // Button Click Effect
+        document.querySelector('.cta-button').addEventListener('click', function() {
+            this.innerHTML = 'جاري التوجيه... <i class="fas fa-spinner fa-spin"></i>';
+            setTimeout(() => {
+                this.innerHTML = 'جرب الآن <i class="fas fa-arrow-left"></i>';
+                alert('سيتم توجيهك إلى صفحة التجربة قريباً');
+            }, 1500);
+        });
     </script>
 </body>
-</html>
+    </html>
